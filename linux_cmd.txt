@@ -3,4 +3,3 @@ Check OS version:
 - cat /etc/os-release
 - uname -a (recommended)
 
-666
