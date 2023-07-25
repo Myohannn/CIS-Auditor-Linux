@@ -1,1 +1,5 @@
+Check OS version:
+- hostnamectl
+- cat /etc/os-release
+- uname -a (recommended)
 
