@@ -64,8 +64,6 @@ def find_element(audit_policies: str) -> None:
     and the content (audit). Finally, it will save the results into a dictionary (data_dict)
     '''
 
-    type_list = set()
-
     soup = BeautifulSoup(audit_policies, 'lxml')
 
     # Find all the custom_item elements
@@ -81,7 +79,7 @@ def find_element(audit_policies: str) -> None:
 
         description = regexes['description'].search(item_str)
         description = description.group(1) if description else None
-        description = description.replace('"', '')
+        description = description.strip('"')
 
         if description[0].isdigit():
             index = re.search(r'(.*?)\s', description)
@@ -91,49 +89,44 @@ def find_element(audit_policies: str) -> None:
             index = 0
 
         file_var = regexes['file'].search(item_str)
-        file_var = (file_var.group(1)).replace('"', '') if file_var else None
+        file_var = (file_var.group(1)).strip('"') if file_var else None
 
         owner_var = regexes['owner'].search(item_str)
-        owner_var = (owner_var.group(1)).replace(
-            '"', '') if owner_var else None
+        owner_var = (owner_var.group(1)).strip('"') if owner_var else None
 
         mask_var = regexes['mask'].search(item_str)
-        mask_var = (mask_var.group(1)).replace('"', '') if mask_var else None
+        mask_var = (mask_var.group(1)).strip('"') if mask_var else None
 
         required_var = regexes['required'].search(item_str)
-        required_var = (required_var.group(1)).replace(
-            '"', '') if required_var else None
+        required_var = (required_var.group(1)).strip(
+            '"') if required_var else None
 
         group_var = regexes['group'].search(item_str)
-        group_var = (group_var.group(1)).replace(
-            '"', '') if group_var else None
+        group_var = (group_var.group(1)).strip('"') if group_var else None
 
         cmd_var = regexes['cmd'].search(item_str)
-        cmd_var = (cmd_var.group(1)).replace('"', '') if cmd_var else None
+        cmd_var = (cmd_var.group(1)).strip('"') if cmd_var else None
 
         expect_var = regexes['expect'].search(item_str)
-        expect_var = (expect_var.group(1)).replace(
-            '"', '') if expect_var else None
+        expect_var = (expect_var.group(1)).strip('"') if expect_var else None
 
         regex_var = regexes['regex'].search(item_str)
-        regex_var = (regex_var.group(1)).replace(
-            '"', '') if regex_var else None
+        regex_var = (regex_var.group(1)).strip('"') if regex_var else None
 
         content_var = regexes['content'].search(item_str)
-        content_var = (content_var.group(1)).replace(
-            '"', '') if content_var else None
+        content_var = (content_var.group(1)).strip(
+            '"') if content_var else None
 
         is_substring_var = regexes['is_substring'].search(item_str)
-        is_substring_var = (is_substring_var.group(1)).replace(
-            '"', '') if is_substring_var else None
+        is_substring_var = (is_substring_var.group(1)).strip(
+            '"') if is_substring_var else None
 
         # Clean the data
-        # to do
+        if cmd_var:
+            cmd_var = cmd_var.replace('\\"', '"').replace("\\'", "'").replace('\\\\n', '\\n').replace("\\\\", "\\").replace("&gt;",">").replace("&amp;","&")
 
         data_dict[type].append([1, type, index, description,
                                 file_var, owner_var, mask_var, required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])
-
-    print(type_list)
 
 
 if __name__ == '__main__':
@@ -152,7 +145,7 @@ if __name__ == '__main__':
 
     # print('Aduit file:', args.audit)
 
-    src_fname = 'src\CIS\CIS_Debian_Linux_11_v1.0.0_L1_Workstation.audit'
+    src_fname = 'src\CIS\CIS_Debian_Linux_10_v1.0.0_L1_Server.audit'
     # src_fname = args.audit
 
     # read .audit file

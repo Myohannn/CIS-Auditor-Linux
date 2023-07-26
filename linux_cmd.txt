@@ -2,3 +2,6 @@ Check OS version:
 - hostnamectl
 - cat /etc/os-release
 - uname -a (recommended)
+
+Process text by AWK:
+https://www.runoob.com/linux/linux-comm-awk.html
