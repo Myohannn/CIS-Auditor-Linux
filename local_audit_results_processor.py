@@ -5,6 +5,8 @@ import argparse
 
 from openpyxl import load_workbook
 
+from utilities.get_CMD_EXEC import compare_CMD_EXEC
+
 
 def get_actual_values(data_dict: dict) -> dict:
     '''
@@ -29,9 +31,9 @@ def get_actual_values(data_dict: dict) -> dict:
 
             if key == "CMD_EXEC":
                 pass
-                # new_df = compare_pwd_policy_local(data_dict)
+                new_df = compare_CMD_EXEC(data_dict)
 
-            # new_dict[key] = new_df
+            new_dict[key] = new_df
         except Exception as e:
             print(e)
 
