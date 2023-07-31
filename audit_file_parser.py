@@ -16,7 +16,8 @@ regexes = {
     'expect': re.compile(r'expect\s+:\s+(.*?)\n'),
     'regex': re.compile(r'regex\s+:\s+(.*?)\n'),
     'content': re.compile(r'content\s+:\s+(.*?)\n'),
-    'is_substring': re.compile(r'is_substring\s+:\s+(.*?)\n')
+    'is_substring': re.compile(r'is_substring\s+:\s+(.*?)\n'),
+    'solution': re.compile(r'solution\s*:\s*(.+?)\n\s*reference', re.DOTALL | re.IGNORECASE)
 }
 
 
@@ -52,7 +53,7 @@ def save_file(out_fname):
     writer = pd.ExcelWriter(out_fname, engine='openpyxl')
 
     for type, data in data_dict.items():
-        df = pd.DataFrame(data, columns=['Checklist', 'Type', 'Index', 'Description',
+        df = pd.DataFrame(data, columns=['Checklist', 'Type', 'Index', 'Description', 'Solution',
                                          'File',  'Owner', 'Mask', 'Required', 'Group', 'CMD', 'Expect', 'Regex', 'Content', 'Is_substring'])
         df.to_excel(writer, sheet_name=type, index=False)
 
@@ -76,6 +77,10 @@ def find_element(audit_policies: str) -> None:
 
         type = regexes['type'].search(item_str)
         type = type.group(1) if type else None
+
+        solution = regexes['solution'].search(item_str)
+        solution = solution.group(1).strip('"').replace(
+            '\n', ' ') if solution else None
 
         description = regexes['description'].search(item_str)
         description = description.group(1) if description else None
@@ -123,9 +128,10 @@ def find_element(audit_policies: str) -> None:
 
         # Clean the data
         if cmd_var:
-            cmd_var = cmd_var.replace('\\"', '"').replace("\\'", "'").replace('\\\\n', '\\n').replace("\\\\", "\\").replace("&gt;",">").replace("&amp;","&")
+            cmd_var = cmd_var.replace('\\"', '"').replace("\\'", "'").replace(
+                '\\\\n', '\\n').replace("\\\\", "\\").replace("&gt;", ">").replace("&amp;", "&")
 
-        data_dict[type].append([1, type, index, description,
+        data_dict[type].append([1, type, index, description, solution,
                                 file_var, owner_var, mask_var, required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])
 
 

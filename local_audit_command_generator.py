@@ -20,6 +20,7 @@ def gen_bash_cmd(data_dict: dict) -> dict:
                 cmd = CMD_value_list[idx]
 
                 CMD_EXEC_cmds.append(f"\necho '=={idx}==' \n"+cmd)
+                # CMD_EXEC_cmds.append(f"\necho '==|==' \n"+cmd)
 
             bash_cmd_dict[key] = ''.join(CMD_EXEC_cmds)
 
