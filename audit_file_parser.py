@@ -91,7 +91,7 @@ def find_element(audit_policies: str) -> None:
             index = index.group(1) if index else None
             description = description.replace(index, '').strip()
         else:
-            index = 0
+            continue
 
         file_var = regexes['file'].search(item_str)
         file_var = (file_var.group(1)).strip('"') if file_var else None
@@ -130,6 +130,12 @@ def find_element(audit_policies: str) -> None:
         if cmd_var:
             cmd_var = cmd_var.replace('\\"', '"').replace("\\'", "'").replace(
                 '\\\\n', '\\n').replace("\\\\", "\\").replace("&gt;", ">").replace("&amp;", "&")
+
+        if expect_var:
+            expect_var = expect_var.replace("\\\\", "\\")
+
+        if regex_var:
+            regex_var = regex_var.replace("\\\\", "\\")
 
         data_dict[type].append([1, type, index, description, solution,
                                 file_var, owner_var, mask_var, required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])

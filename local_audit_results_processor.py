@@ -30,14 +30,13 @@ def get_actual_values(data_dict: dict) -> dict:
         try:
 
             if key == "CMD_EXEC":
-                pass
                 new_df = compare_CMD_EXEC(data_dict)
+            else:
+                new_df = pd.DataFrame()
 
             new_dict[key] = new_df
         except Exception as e:
             print(e)
-
-        # new_dict[key] = new_df
 
     return new_dict
 
@@ -127,7 +126,8 @@ def save_file(out_fname: str, data_dict_list: list, ip_addr: str) -> None:
 
     column_names = result.columns.tolist()
 
-    value_n_result = column_names[11:]
+    value_n_result = column_names[15:]
+    print(column_names[0])
     ip_list = [ip_addr, '']
     name_list = []
 
@@ -140,10 +140,10 @@ def save_file(out_fname: str, data_dict_list: list, ip_addr: str) -> None:
             # ip_list.append('')
             name_list.append('Result')
 
-    new_data = ['Checklist', 'Type', 'Index', 'Description', 'Solution', 'Reg Key', 'Reg Item', 'Reg Option', 'Audit Policy Subcategory',
-                'Right type', 'Value Data'] + name_list
-    result.columns = ['Checklist', 'Type', 'Index', 'Description', 'Solution', 'Reg Key', 'Reg Item', 'Reg Option', 'Audit Policy Subcategory',
-                      'Right type', 'Value Data'] + ip_list
+    new_data = ['Checklist', 'Type', 'Index', 'Description', 'Solution',
+                'File',  'Owner', 'Mask', 'Required', 'Group', 'CMD', 'Expect', 'Regex', 'Content', 'Is_substring'] + name_list
+    result.columns = ['Checklist', 'Type', 'Index', 'Description', 'Solution',
+                      'File',  'Owner', 'Mask', 'Required', 'Group', 'CMD', 'Expect', 'Regex', 'Content', 'Is_substring'] + ip_list
 
     new_df = pd.DataFrame(
         [new_data + [''] * (result.shape[1] - len(new_data))], columns=result.columns)
@@ -160,11 +160,11 @@ def save_file(out_fname: str, data_dict_list: list, ip_addr: str) -> None:
     ws = wb.active
 
     # Merge the appropriate cells in the new first row
-    for col in range(1, 12):  # adjust these values as needed
+    for col in range(1, 16):  # adjust these values as needed
         ws.merge_cells(start_row=1, start_column=col,
                        end_row=2, end_column=col)
 
-    for ip_col in range(12, len(result.columns)):  # adjust these values as needed
+    for ip_col in range(16, len(result.columns)):  # adjust these values as needed
         if ip_col % 2 == 0:
             ws.merge_cells(start_row=1, start_column=ip_col,
                            end_row=1, end_column=ip_col+1)
@@ -174,8 +174,6 @@ def save_file(out_fname: str, data_dict_list: list, ip_addr: str) -> None:
     # Save the workbook
     wb.save(out_fname)
     print((f"Result saved into {out_fname}"))
-
-    logging.info(f"Result saved into {out_fname}")
 
 
 '''
@@ -214,21 +212,21 @@ if __name__ == '__main__':
 
     start_t0 = time.time()
 
-    result_fname = "output.txt"
+    result_fname = "output_Debian11_su.txt"
     # result_fname = args.ps_result
 
     output_list = []
     with open(result_fname, 'r') as file:
         lines = file.readlines()
-
-    single_line = ' '.join(line.strip() for line in lines)
+    # exit()
+    single_line = '\n'.join(line.strip() for line in lines)
 
     # actual value list
     output_list = single_line.strip().split("==|==")
     output_list.pop(0)
 
-    print(len(output_list))
-    print(output_list)
+    # print(output_list)
+    # exit()
 
     audit_fname = "src\Audit\CIS_Debian_Linux_10_v1.0.0_L1_Server.xlsx"
     # audit_fname = args.audit
@@ -243,7 +241,7 @@ if __name__ == '__main__':
             data_dict[key]['Actual Value'] = output_list[head: (head+length)]
             head += length
 
-    exit()
+    # exit()
 
     new_dict = get_actual_values(data_dict)
     results = []
@@ -251,4 +249,4 @@ if __name__ == '__main__':
 
     ip_addr = "IP"
     # # write output file
-    save_file(args.output, results, ip_addr)
+    save_file("debian11_result_su5.xlsx", results, ip_addr)
