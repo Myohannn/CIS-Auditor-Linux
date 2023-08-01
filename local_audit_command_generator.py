@@ -11,10 +11,10 @@ def gen_bash_cmd(data_dict: dict) -> dict:
         checklist_value_list = df['Checklist'].values
         description_value_list = df['Description'].values
         CMD_value_list = df['CMD'].values
+        File_value_list = df['File'].values
 
         if key == "CMD_EXEC":
             CMD_EXEC_cmds = []
-            CMD_EXEC_cmds_list = []
 
             for idx, val in enumerate(checklist_value_list):
                 cmd = CMD_value_list[idx]
@@ -23,6 +23,17 @@ def gen_bash_cmd(data_dict: dict) -> dict:
                 CMD_EXEC_cmds.append(f"\necho '==|==' \n"+cmd)
 
             bash_cmd_dict[key] = ''.join(CMD_EXEC_cmds)
+
+        if key == "FILE_CHECK_NOT":
+            FILE_CHECK_NOT_cmds = []
+
+            for idx, val in enumerate(checklist_value_list):
+                file_path = File_value_list[idx]
+
+                FILE_CHECK_NOT_cmds.append(
+                    "\necho '==|==' \nstat " + file_path)
+
+            bash_cmd_dict[key] = ''.join(FILE_CHECK_NOT_cmds)
 
     return bash_cmd_dict
 

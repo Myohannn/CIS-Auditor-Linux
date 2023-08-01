@@ -6,6 +6,7 @@ import argparse
 from openpyxl import load_workbook
 
 from utilities.get_CMD_EXEC import compare_CMD_EXEC
+from utilities.get_FILE_CHECK_NOT import compare_FILE_CHECK_NOT
 
 
 def get_actual_values(data_dict: dict) -> dict:
@@ -26,11 +27,13 @@ def get_actual_values(data_dict: dict) -> dict:
     new_dict = {}
 
     for key in data_dict.keys():
+        print(key)
 
         try:
-
             if key == "CMD_EXEC":
                 new_df = compare_CMD_EXEC(data_dict)
+            elif key == "FILE_CHECK_NOT":
+                new_df = compare_FILE_CHECK_NOT(data_dict)
             else:
                 new_df = pd.DataFrame()
 
@@ -236,16 +239,17 @@ if __name__ == '__main__':
     # add actual value to the audit file
     head = 0
     for key in data_dict:
-        if key == "CMD_EXEC":
+        if key == "CMD_EXEC" or key == "FILE_CHECK_NOT":
             length = len(data_dict[key])
             data_dict[key]['Actual Value'] = output_list[head: (head+length)]
             head += length
 
-    # exit()
 
     new_dict = get_actual_values(data_dict)
     results = []
     results.append(new_dict)
+
+   
 
     ip_addr = "IP"
     # # write output file

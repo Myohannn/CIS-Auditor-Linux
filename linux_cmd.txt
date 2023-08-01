@@ -5,3 +5,6 @@ Check OS version:
 
 Process text by AWK:
 https://www.runoob.com/linux/linux-comm-awk.html
+
+Check file
+- stat "file path"

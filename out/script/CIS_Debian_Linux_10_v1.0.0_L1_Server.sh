@@ -1,6 +1,14 @@
 #!/bin/bash
 
 echo '==|==' 
+stat /etc/cron.deny
+echo '==|==' 
+stat /etc/at.deny
+echo '==|==' 
+stat ~/.forward
+echo '==|==' 
+stat ~/.netrc;
+echo '==|==' 
 /sbin/modprobe -n -v freevxfs | /usr/bin/awk '{print} END {if (NR == 0) print "fail"}'
 echo '==|==' 
 /usr/sbin/lsmod | /bin/grep freevxfs | /usr/bin/awk '{print} END {if (NR == 0) print "pass" ; else print "fail"}'
