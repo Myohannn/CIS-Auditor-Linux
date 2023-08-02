@@ -138,7 +138,7 @@ def find_element(audit_policies: str) -> None:
             regex_var = regex_var.replace("\\\\", "\\")
 
         data_dict[type].append([1, type, index, description, solution,
-                                file_var, owner_var, mask_var, required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])
+                                file_var, owner_var, str(mask_var), required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])
 
 
 if __name__ == '__main__':

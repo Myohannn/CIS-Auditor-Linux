@@ -388,3 +388,51 @@ echo '==|=='
 /usr/bin/cat /etc/passwd | /usr/bin/egrep -v '^(root|halt|sync|shutdown)' | /usr/bin/awk -F: '($7 != "/sbin/nologin") { print $1 " " $3 " " $6 }' | while read user uid dir; do if [ -f "$dir/.rhosts" ]; then /usr/bin/echo ".rhosts file $dir/.rhosts exists"; fi; done | /usr/bin/awk '{ print } END { if (NR==0) print "No .rhosts files found" }'
 echo '==|==' 
 /usr/bin/awk -F: 'FILENAME == "/etc/group" && $1 == "shadow" { gid=$3; if ($4!="") { print "secondary "$4; f=1 } } FILENAME == "/etc/passwd" && $4 == gid { print "primary "$1; f=1 } END { if (!f) print "shadow group empty" }' /etc/group /etc/passwd;
+echo '==|==' 
+stat -c %a /boot/grub/grub.cfg
+echo '==|==' 
+stat -c %a /etc/motd
+echo '==|==' 
+stat -c %a /etc/issue
+echo '==|==' 
+stat -c %a /etc/issue.net
+echo '==|==' 
+stat -c %a /etc/crontab
+echo '==|==' 
+stat -c %a /etc/cron.hourly
+echo '==|==' 
+stat -c %a /etc/cron.daily
+echo '==|==' 
+stat -c %a /etc/cron.weekly
+echo '==|==' 
+stat -c %a /etc/cron.monthly
+echo '==|==' 
+stat -c %a /etc/cron.d
+echo '==|==' 
+stat -c %a /etc/at.allow
+echo '==|==' 
+stat -c %a /etc/cron.allow
+echo '==|==' 
+stat -c %a /etc/ssh/sshd_config
+echo '==|==' 
+stat -c %a /etc/ssh/*key
+echo '==|==' 
+stat -c %a /etc/ssh/*key.pub
+echo '==|==' 
+stat -c %a /etc/passwd
+echo '==|==' 
+stat -c %a /etc/gshadow-
+echo '==|==' 
+stat -c %a /etc/shadow
+echo '==|==' 
+stat -c %a /etc/group
+echo '==|==' 
+stat -c %a /etc/passwd-
+echo '==|==' 
+stat -c %a /etc/shadow-
+echo '==|==' 
+stat -c %a /etc/group-
+echo '==|==' 
+stat -c %a /etc/gshadow
+echo '==|==' 
+stat -c %a ~/.[!.]*;

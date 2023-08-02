@@ -562,12 +562,12 @@ table inet filter {
 ==|==
 /tmp/test_kali.sh: line 326: /sbin/ip6tables: No such file or directory
 ==|==
+/tmp/test_kali.sh: line 328: /usr/sbin/ip6tables: No such file or directory
 awk: 1: unexpected character '&'
 awk: line 1: extra ')'
 awk: line 1: syntax error at or near {
 awk: line 1: syntax error at or near else
 awk: line 1: syntax error at or near }
-/tmp/test_kali.sh: line 328: /usr/sbin/ip6tables: No such file or directory
 ==|==
 /tmp/test_kali.sh: line 330: /usr/sbin/ip6tables: No such file or directory
 fail
@@ -581,10 +581,12 @@ nl    UNCONN 0      0                                               0:498       
 nl    UNCONN 0      0                                               0:1720                    *           
 nl    UNCONN 0      0                                               0:1599                    *           
 nl    UNCONN 0      0                                               0:1304                    *           
+nl    UNCONN 0      0                                               0:25750                   *           
 nl    UNCONN 0      0                                               0:1338                    *           
 nl    UNCONN 0      0                                               0:464                     *           
 nl    UNCONN 0      0                                               0:1299                    *           
 nl    UNCONN 0      0                                               0:0                       *           
+nl    UNCONN 0      0                                               0:25750                   *           
 nl    UNCONN 0      0                                               0:1720                    *           
 nl    UNCONN 0      0                                               0:1412                    *           
 nl    UNCONN 0      0                                               0:1599                    *           
@@ -594,7 +596,7 @@ nl    UNCONN 0      0                                               0:1305      
 nl    UNCONN 0      0                                               0:1299                    *           
 nl    UNCONN 0      0                                               0:498                     *           
 nl    UNCONN 0      0                                               0:464                     *           
-nl    UNCONN 4352   0                                               4:24308                   *           
+nl    UNCONN 4352   0                                               4:27016                   *           
 nl    UNCONN 768    0                                               4:0                       *           
 nl    UNCONN 0      0                                               7:0                       *           
 nl    UNCONN 0      0                                               9:-1308913300             *           
@@ -613,8 +615,8 @@ nl    UNCONN 0      0                                              15:-103283574
 nl    UNCONN 0      0                                              15:-536882272              *           
 nl    UNCONN 0      0                                              15:1361                    *           
 nl    UNCONN 0      0                                              15:484                     *           
-nl    UNCONN 0      0                                              15:-1775953004             *           
 nl    UNCONN 0      0                                              15:-1174616266             *           
+nl    UNCONN 0      0                                              15:1064                    *           
 nl    UNCONN 0      0                                              15:576                     *           
 nl    UNCONN 0      0                                              15:527                     *           
 nl    UNCONN 0      0                                              15:1350                    *           
@@ -764,10 +766,10 @@ No results found
    652851      4 -rw-r--r--   1 root     root          117 Jul 26 10:06 /var/log/installer/firmware-summary
    653002    788 -rw-r--r--   1 root     root       799365 Jul 26 16:46 /var/log/dpkg.log
    653337      0 -rw-r--r--   1 root     root            0 Jul 26 09:40 /var/log/faillog
-   653030    204 -rw-rw-r--   1 root     utmp       203520 Aug  1 15:42 /var/log/wtmp
+   653030    208 -rw-rw-r--   1 root     utmp       206592 Aug  1 16:54 /var/log/wtmp
    653031      4 -rw-rw----   1 root     utmp         2304 Aug  1 09:35 /var/log/btmp
    652811     24 -rw-r--r--   1 root     root        20745 Jul 26 10:05 /var/log/vboxpostinstall.log
-   653032      4 -rw-rw-r--   1 root     utmp       292292 Aug  1 15:42 /var/log/lastlog
+   653032      4 -rw-rw-r--   1 root     utmp       292292 Aug  1 16:54 /var/log/lastlog
    652814     60 -rw-r--r--   1 root     root        60772 Jul 26 16:46 /var/log/apt/eipp.log.xz
    653379     72 -rw-r--r--   1 root     root        70717 Jul 26 16:46 /var/log/apt/history.log
 fail
@@ -890,3 +892,60 @@ All .netrc files are not group or world accessible
 No .rhosts files found
 ==|==
 shadow group empty
+==|==
+600
+==|==
+644
+==|==
+644
+==|==
+644
+==|==
+644
+==|==
+755
+==|==
+755
+==|==
+755
+==|==
+755
+==|==
+755
+==|==
+stat: cannot statx '/etc/at.allow': No such file or directory
+==|==
+stat: cannot statx '/etc/cron.allow': No such file or directory
+==|==
+644
+==|==
+600
+600
+600
+==|==
+644
+644
+644
+==|==
+644
+==|==
+640
+==|==
+640
+==|==
+644
+==|==
+644
+==|==
+640
+==|==
+644
+==|==
+640
+==|==
+600
+644
+700
+600
+644
+700

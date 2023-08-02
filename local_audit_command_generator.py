@@ -34,6 +34,17 @@ def gen_bash_cmd(data_dict: dict) -> dict:
                     "\necho '==|==' \nstat " + file_path)
 
             bash_cmd_dict[key] = ''.join(FILE_CHECK_NOT_cmds)
+        
+        if key == "FILE_CHECK":
+            FILE_CHECK_cmds = []
+
+            for idx, val in enumerate(checklist_value_list):
+                file_path = File_value_list[idx]
+
+                FILE_CHECK_cmds.append(
+                    "\necho '==|==' \nstat -c %a " + file_path)
+
+            bash_cmd_dict[key] = ''.join(FILE_CHECK_cmds)
 
     return bash_cmd_dict
 

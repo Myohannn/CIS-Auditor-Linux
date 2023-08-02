@@ -7,6 +7,7 @@ from openpyxl import load_workbook
 
 from utilities.get_CMD_EXEC import compare_CMD_EXEC
 from utilities.get_FILE_CHECK_NOT import compare_FILE_CHECK_NOT
+from utilities.get_FILE_CHECK import compare_FILE_CHECK
 
 
 def get_actual_values(data_dict: dict) -> dict:
@@ -34,6 +35,8 @@ def get_actual_values(data_dict: dict) -> dict:
                 new_df = compare_CMD_EXEC(data_dict)
             elif key == "FILE_CHECK_NOT":
                 new_df = compare_FILE_CHECK_NOT(data_dict)
+            elif key == "FILE_CHECK":
+                new_df = compare_FILE_CHECK(data_dict)
             else:
                 new_df = pd.DataFrame()
 
@@ -67,11 +70,12 @@ def read_file(fname: str) -> dict:
     }
 
     xl = pd.ExcelFile(fname)
+
     # df = xl.parse(sheet_name=0)
 
     for ptype in data_dict:
         try:
-            df0 = xl.parse(sheet_name=ptype)
+            df0 = xl.parse(sheet_name=ptype,dtype={'Mask': str})
             data_dict[ptype] = df0.applymap(remove_illegal_chars)
         except ValueError as e:
             logging.error(f"{ptype} not found")
@@ -216,12 +220,14 @@ if __name__ == '__main__':
     start_t0 = time.time()
 
     result_fname = "output_Debian11_su.txt"
+    # result_fname = "output_num.txt"
     # result_fname = args.ps_result
 
     output_list = []
     with open(result_fname, 'r') as file:
         lines = file.readlines()
     # exit()
+
     single_line = '\n'.join(line.strip() for line in lines)
 
     # actual value list
@@ -239,17 +245,14 @@ if __name__ == '__main__':
     # add actual value to the audit file
     head = 0
     for key in data_dict:
-        if key == "CMD_EXEC" or key == "FILE_CHECK_NOT":
+        if key == "CMD_EXEC" or key == "FILE_CHECK_NOT" or key == "FILE_CHECK":
             length = len(data_dict[key])
             data_dict[key]['Actual Value'] = output_list[head: (head+length)]
             head += length
 
-
     new_dict = get_actual_values(data_dict)
     results = []
     results.append(new_dict)
-
-   
 
     ip_addr = "IP"
     # # write output file
