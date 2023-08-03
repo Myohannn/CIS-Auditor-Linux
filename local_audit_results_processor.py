@@ -8,6 +8,8 @@ from openpyxl import load_workbook
 from utilities.get_CMD_EXEC import compare_CMD_EXEC
 from utilities.get_FILE_CHECK_NOT import compare_FILE_CHECK_NOT
 from utilities.get_FILE_CHECK import compare_FILE_CHECK
+from utilities.get_FILE_CONTENT_CHECK_NOT import compare_FILE_CONTENT_CHECK_NOT
+from utilities.get_FILE_CONTENT_CHECK import compare_FILE_CONTENT_CHECK
 
 
 def get_actual_values(data_dict: dict) -> dict:
@@ -37,6 +39,10 @@ def get_actual_values(data_dict: dict) -> dict:
                 new_df = compare_FILE_CHECK_NOT(data_dict)
             elif key == "FILE_CHECK":
                 new_df = compare_FILE_CHECK(data_dict)
+            elif key == "FILE_CONTENT_CHECK_NOT":
+                new_df = compare_FILE_CONTENT_CHECK_NOT(data_dict)
+            elif key == "FILE_CONTENT_CHECK":
+                new_df = compare_FILE_CONTENT_CHECK(data_dict)
             else:
                 new_df = pd.DataFrame()
 
@@ -75,7 +81,7 @@ def read_file(fname: str) -> dict:
 
     for ptype in data_dict:
         try:
-            df0 = xl.parse(sheet_name=ptype,dtype={'Mask': str})
+            df0 = xl.parse(sheet_name=ptype, dtype={'Mask': str})
             data_dict[ptype] = df0.applymap(remove_illegal_chars)
         except ValueError as e:
             logging.error(f"{ptype} not found")
@@ -237,7 +243,7 @@ if __name__ == '__main__':
     # print(output_list)
     # exit()
 
-    audit_fname = "src\Audit\CIS_Debian_Linux_10_v1.0.0_L1_Server.xlsx"
+    audit_fname = "src\Audit\CIS_Debian_Linux_10_v2.0.0_L1_Server.xlsx"
     # audit_fname = args.audit
 
     data_dict = read_file(audit_fname)
@@ -245,15 +251,16 @@ if __name__ == '__main__':
     # add actual value to the audit file
     head = 0
     for key in data_dict:
-        if key == "CMD_EXEC" or key == "FILE_CHECK_NOT" or key == "FILE_CHECK":
+        if key == "CMD_EXEC" or key == "FILE_CHECK_NOT" or key == "FILE_CHECK" or key == "FILE_CONTENT_CHECK_NOT" or key == "FILE_CONTENT_CHECK":
             length = len(data_dict[key])
             data_dict[key]['Actual Value'] = output_list[head: (head+length)]
             head += length
 
     new_dict = get_actual_values(data_dict)
+
     results = []
     results.append(new_dict)
 
     ip_addr = "IP"
     # # write output file
-    save_file("debian11_result_su5.xlsx", results, ip_addr)
+    save_file("debian11_result_su2.xlsx", results, ip_addr)

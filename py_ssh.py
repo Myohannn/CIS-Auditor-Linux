@@ -7,7 +7,7 @@ ssh.connect(hostname='192.168.56.115', port=22,
             username='vboxuser', password='AskDNV8!')
 
 # To upload a file
-localpath = 'out\script\CIS_Debian_Linux_10_v1.0.0_L1_Server.sh'
+localpath = 'out\script\CIS_Debian_Linux_10_v2.0.0_L1_Server.sh'
 remotepath = '/tmp/test_kali.sh'
 sftp = ssh.open_sftp()
 sftp.put(localpath=localpath, remotepath=remotepath)
@@ -44,7 +44,7 @@ print("Logged in to su")
 # Execute the script and print a finish marker at the end
 cmd = remotepath + ' > /tmp/output.txt 2>&1;\n'
 shell.send(cmd)
-time.sleep(5)
+time.sleep(40)
 
 # # # Read from stdout until the finish marker is found
 # while not shell.recv_ready():  # Wait until there is output to read

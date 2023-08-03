@@ -12,6 +12,7 @@ def gen_bash_cmd(data_dict: dict) -> dict:
         description_value_list = df['Description'].values
         CMD_value_list = df['CMD'].values
         File_value_list = df['File'].values
+        Regex_value_list = df['Regex'].values
 
         if key == "CMD_EXEC":
             CMD_EXEC_cmds = []
@@ -24,7 +25,7 @@ def gen_bash_cmd(data_dict: dict) -> dict:
 
             bash_cmd_dict[key] = ''.join(CMD_EXEC_cmds)
 
-        if key == "FILE_CHECK_NOT":
+        elif key == "FILE_CHECK_NOT":
             FILE_CHECK_NOT_cmds = []
 
             for idx, val in enumerate(checklist_value_list):
@@ -34,8 +35,8 @@ def gen_bash_cmd(data_dict: dict) -> dict:
                     "\necho '==|==' \nstat " + file_path)
 
             bash_cmd_dict[key] = ''.join(FILE_CHECK_NOT_cmds)
-        
-        if key == "FILE_CHECK":
+
+        elif key == "FILE_CHECK":
             FILE_CHECK_cmds = []
 
             for idx, val in enumerate(checklist_value_list):
@@ -45,6 +46,31 @@ def gen_bash_cmd(data_dict: dict) -> dict:
                     "\necho '==|==' \nstat -c %a " + file_path)
 
             bash_cmd_dict[key] = ''.join(FILE_CHECK_cmds)
+
+        elif key == "FILE_CONTENT_CHECK_NOT":
+            FILE_CONTENT_CHECK_NOT_cmds = []
+
+            for idx, val in enumerate(checklist_value_list):
+                file_path = File_value_list[idx]
+                regex = Regex_value_list[idx]
+
+                FILE_CONTENT_CHECK_NOT_cmds.append(
+                    f'\necho "==|==" \ngrep -nE "{regex}" {file_path}')
+
+            bash_cmd_dict[key] = ''.join(FILE_CONTENT_CHECK_NOT_cmds)
+
+        elif key == "FILE_CONTENT_CHECK":
+            FILE_CONTENT_CHECK_cmds = []
+
+            for idx, val in enumerate(checklist_value_list):
+                file_path = File_value_list[idx]
+                regex = Regex_value_list[idx].replace(
+                    "(?i)", "").replace("(?-i)", "")
+
+                FILE_CONTENT_CHECK_cmds.append(
+                    f'\necho "==|==" \ngrep -nE "{regex}" {file_path}')
+
+            bash_cmd_dict[key] = ''.join(FILE_CONTENT_CHECK_cmds)
 
     return bash_cmd_dict
 
@@ -93,7 +119,7 @@ if __name__ == '__main__':
     # fname = args.audit
 
     # read audit file
-    fname = "src\Audit\CIS_Debian_Linux_10_v1.0.0_L1_Server.xlsx"
+    fname = "src\Audit\CIS_Debian_Linux_10_v2.0.0_L1_Server.xlsx"
     data_dict = read_file(fname)
     bash_cmd_dict = gen_bash_cmd(data_dict)
 
@@ -104,8 +130,10 @@ if __name__ == '__main__':
     with open(script_name, 'w') as f:
         f.write("#!/bin/bash\n")
         for key in bash_cmd_dict:
+            if bash_cmd_dict[key] == []:
+                continue
             for cmd in bash_cmd_dict[key]:
                 f.write(cmd)
-            f.write(";")
+            # f.write(";")
 
     print("Done! File saved: %s", script_name)

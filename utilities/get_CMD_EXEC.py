@@ -9,17 +9,19 @@ def compare_CMD_EXEC(data_dict: dict) -> pd.DataFrame():
     checklist_values = df['Checklist'].values
     description_values = df['Description'].values
     idx_values = df['Index'].values
-    value_data_values = df['Expect'].values
+    expect_data_values = df['Expect'].values
     actual_value_list = df['Actual Value'].values
 
     result_lists = []
 
     for idx, val in enumerate(checklist_values):
 
-        pass_result = True
+        pass_result = False
 
         actual_value = actual_value_list[idx].lower().strip()
-        expected_value = str(value_data_values[idx]).lower()
+        expected_value = str(expect_data_values[idx]).replace(
+            "(?i)", "").replace("(?-i)", "")
+
 
         pattern = re.compile(expected_value, re.MULTILINE).search(actual_value)
 

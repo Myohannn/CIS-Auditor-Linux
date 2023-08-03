@@ -12,7 +12,7 @@ regexes = {
     'mask': re.compile(r'mask\s+:\s+(.*?)\n'),
     'required': re.compile(r'required\s+:\s+(.*?)\n'),
     'group': re.compile(r'group\s+:\s+(.*?)\n'),
-    'cmd': re.compile(r'cmd\s+:\s+(.*?)\n'),
+    'cmd': re.compile(r'cmd\s*:\s*(.+?)\n\s*expect', re.DOTALL | re.IGNORECASE),
     'expect': re.compile(r'expect\s+:\s+(.*?)\n'),
     'regex': re.compile(r'regex\s+:\s+(.*?)\n'),
     'content': re.compile(r'content\s+:\s+(.*?)\n'),
@@ -52,10 +52,10 @@ def save_file(out_fname):
 
     writer = pd.ExcelWriter(out_fname, engine='openpyxl')
 
-    for type, data in data_dict.items():
+    for audit_type, data in data_dict.items():
         df = pd.DataFrame(data, columns=['Checklist', 'Type', 'Index', 'Description', 'Solution',
                                          'File',  'Owner', 'Mask', 'Required', 'Group', 'CMD', 'Expect', 'Regex', 'Content', 'Is_substring'])
-        df.to_excel(writer, sheet_name=type, index=False)
+        df.to_excel(writer, sheet_name=audit_type, index=False)
 
     writer.close()
 
@@ -70,21 +70,24 @@ def find_element(audit_policies: str) -> None:
     # Find all the custom_item elements
     items = soup.find_all('custom_item')
 
+    type_set = set()
+
     # Extract the required data from each custom_item
     for item in items:
         item_str = str(item)
         # item_str = str(item).replace('"', '')
 
-        type = regexes['type'].search(item_str)
-        type = type.group(1) if type else None
+        audit_type = regexes['type'].search(item_str)
+        audit_type = audit_type.group(1) if audit_type else None
+        type_set.add(audit_type)
 
         solution = regexes['solution'].search(item_str)
-        solution = solution.group(1).strip('"').replace(
+        solution = solution.group(1)[1:-1].replace(
             '\n', ' ') if solution else None
 
         description = regexes['description'].search(item_str)
         description = description.group(1) if description else None
-        description = description.strip('"')
+        description = description[1:-1]
 
         if description[0].isdigit():
             index = re.search(r'(.*?)\s', description)
@@ -94,51 +97,55 @@ def find_element(audit_policies: str) -> None:
             continue
 
         file_var = regexes['file'].search(item_str)
-        file_var = (file_var.group(1)).strip('"') if file_var else None
+        file_var = (file_var.group(1))[1:-1] if file_var else None
 
         owner_var = regexes['owner'].search(item_str)
-        owner_var = (owner_var.group(1)).strip('"') if owner_var else None
+        owner_var = (owner_var.group(1))[1:-1] if owner_var else None
 
         mask_var = regexes['mask'].search(item_str)
-        mask_var = (mask_var.group(1)).strip('"') if mask_var else None
+        mask_var = (mask_var.group(1))[1:-1] if mask_var else None
 
         required_var = regexes['required'].search(item_str)
-        required_var = (required_var.group(1)).strip(
-            '"') if required_var else None
+        required_var = (required_var.group(1))[1:-1] if required_var else None
 
         group_var = regexes['group'].search(item_str)
-        group_var = (group_var.group(1)).strip('"') if group_var else None
+        group_var = (group_var.group(1))[1:-1] if group_var else None
 
         cmd_var = regexes['cmd'].search(item_str)
-        cmd_var = (cmd_var.group(1)).strip('"') if cmd_var else None
+        cmd_var = (cmd_var.group(1))[1:-1] if cmd_var else None
 
         expect_var = regexes['expect'].search(item_str)
-        expect_var = (expect_var.group(1)).strip('"') if expect_var else None
+        expect_var = (expect_var.group(1))[1:-1] if expect_var else None
 
         regex_var = regexes['regex'].search(item_str)
-        regex_var = (regex_var.group(1)).strip('"') if regex_var else None
+        regex_var = (regex_var.group(1))[1:-1] if regex_var else None
 
         content_var = regexes['content'].search(item_str)
-        content_var = (content_var.group(1)).strip(
-            '"') if content_var else None
+        content_var = (content_var.group(1))[1:-1] if content_var else None
 
         is_substring_var = regexes['is_substring'].search(item_str)
-        is_substring_var = (is_substring_var.group(1)).strip(
-            '"') if is_substring_var else None
+        is_substring_var = (is_substring_var.group(1))[
+            1:-1] if is_substring_var else None
 
         # Clean the data
         if cmd_var:
+
             cmd_var = cmd_var.replace('\\"', '"').replace("\\'", "'").replace(
-                '\\\\n', '\\n').replace("\\\\", "\\").replace("&gt;", ">").replace("&amp;", "&")
+                '\\\\n', '\\n').replace("\\\\", "\\").replace("&gt;", ">").replace("&amp;", "&").replace("&lt;", "<")
+            
+            if "Ensure all current passwords uses the configured hashing algorithm" in description:
+                cmd_var = "echo Manual"
+            elif "Ensure ip6tables firewall rules exist for all open ports" in description:
+                cmd_var = cmd_var.replace("exit", "echo")
 
         if expect_var:
             expect_var = expect_var.replace("\\\\", "\\")
 
         if regex_var:
-            regex_var = regex_var.replace("\\\\", "\\")
+            regex_var = regex_var.replace("\\\\", "\\").replace('\\\"', '\"')
 
-        data_dict[type].append([1, type, index, description, solution,
-                                file_var, owner_var, str(mask_var), required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])
+        data_dict[audit_type].append([1, audit_type, index, description, solution,
+                                      file_var, owner_var, str(mask_var), required_var, group_var, cmd_var, expect_var, regex_var, content_var, is_substring_var])
 
 
 if __name__ == '__main__':
@@ -157,7 +164,7 @@ if __name__ == '__main__':
 
     # print('Aduit file:', args.audit)
 
-    src_fname = 'src\CIS\CIS_Debian_Linux_10_v1.0.0_L1_Server.audit'
+    src_fname = 'src\CIS\CIS_Debian_Linux_10_v2.0.0_L1_Server.audit'
     # src_fname = args.audit
 
     # read .audit file

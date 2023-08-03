@@ -389,6 +389,22 @@ echo '==|=='
 echo '==|==' 
 /usr/bin/awk -F: 'FILENAME == "/etc/group" && $1 == "shadow" { gid=$3; if ($4!="") { print "secondary "$4; f=1 } } FILENAME == "/etc/passwd" && $4 == gid { print "primary "$1; f=1 } END { if (!f) print "shadow group empty" }' /etc/group /etc/passwd;
 echo '==|==' 
+grep -nE '^root:' /etc/shadow
+echo '==|==' 
+grep -nE '(\\[mrsv]|[Dd]ebian)' /etc/motd
+echo '==|==' 
+grep -nE '(\\[mrsv]|[Dd]ebian)' /etc/issue
+echo '==|==' 
+grep -nE '(\\[mrsv]|[Dd]ebian)' /etc/issue.net
+echo '==|==' 
+grep -nE '^(?i)[\s]*ignorerhosts[\s](?-i)' /etc/ssh/sshd_config
+echo '==|==' 
+grep -nE '^[\s]*\+:' /etc/passwd
+echo '==|==' 
+grep -nE '^[\s]*\+:' /etc/shadow
+echo '==|==' 
+grep -nE '^[\s]*\+:' /etc/group;
+echo '==|==' 
 stat -c %a /boot/grub/grub.cfg
 echo '==|==' 
 stat -c %a /etc/motd
@@ -436,3 +452,129 @@ echo '==|=='
 stat -c %a /etc/gshadow
 echo '==|==' 
 stat -c %a ~/.[!.]*;
+echo '==|==' 
+grep -inE '^[\s]*set[\s]*superusers[\s]*=' /boot/grub/grub.cfg
+echo '==|==' 
+grep -inE '^[\s]*password' /boot/grub/grub.cfg
+echo '==|==' 
+grep -inE '^[\s]*Storage[\s]*=' /etc/systemd/coredump.conf
+echo '==|==' 
+grep -inE '^[\s]*ProcessSizeMax[\s]*=' /etc/systemd/coredump.conf
+echo '==|==' 
+grep -inE '^[\s]*linux.*' /boot/grub/grub.cfg
+echo '==|==' 
+grep -inE '^[\s]*linux.*' /boot/grub/grub.cfg
+echo '==|==' 
+grep -inE '^[\s]*banner-message-enable[\s]*=' /etc/gdm3/greeter.dconf-defaults
+echo '==|==' 
+grep -inE '^[\s]*RootDistanceMaxSec' /etc/systemd/timesyncd.conf
+echo '==|==' 
+grep -inE '^[\s]*(server|pool)[\s]+(?:@NTP_SERVER@|@FALLBACK_NTP_SERVER@)' /etc/chrony/chrony.conf
+echo '==|==' 
+grep -inE '^[\s]*restrict[\s]+(-4)?[\s]*default' /etc/ntp.conf
+echo '==|==' 
+grep -inE '^[\s]*restrict[\s]+-6[\s][^:]' /etc/ntp.conf
+echo '==|==' 
+grep -inE '^[\s]*server[\s]+@NTP_SERVER@[\s]*$' /etc/ntp.conf
+echo '==|==' 
+grep -inE '^[\s]*RUNASUSER[\s]*=' /etc/init.d/ntp
+echo '==|==' 
+grep -inE '^[\s]*dc_local_interfaces[\s]*=[\s]*' /etc/exim4/update-exim4.conf.conf
+echo '==|==' 
+grep -inE '^[\s]*mail\.\*' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*mail\.info' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*mail\.warning' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*mail\.err' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*news\.crit' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*news\.err' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*news\.notice' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*\*\.=warning;\*\.=err' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*\*\.crit' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*\*\.\*;mail\.none;news\.none' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*local0,local1' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*local2,local3' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*local4,local5' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*local6,local7' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^\*\.\*[^I][^I]*\@\@' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+echo '==|==' 
+grep -inE '^[\s]*ForwardToSyslog[\s]*=' /etc/systemd/journald.conf
+echo '==|==' 
+grep -inE '^[\s]*Compress[\s]*=' /etc/systemd/journald.conf
+echo '==|==' 
+grep -inE '^[\s]*Storage[\s]*=' /etc/systemd/journald.conf
+echo '==|==' 
+grep -inE '^[\s]*create[\s]+[\S]+' /etc/logrotate.conf /etc/logrotate.d/*
+echo '==|==' 
+grep -inE '^[\s]*Protocol[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*LogLevel[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*MaxAuthTries[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*HostbasedAuthentication[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*PermitRootLogin[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*PermitEmptyPasswords[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*PermitUserEnvironment[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*(Allow|Deny)(Users|Groups)[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*Banner[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*usePAM[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*MaxStartups[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*MaxSessions[\s]' /etc/ssh/sshd_config
+echo '==|==' 
+grep -inE '^[\s]*password[\s]+requisite[\s]+pam_pwquality\.so[\s]' /etc/pam.d/common-password
+echo '==|==' 
+grep -inE '^[\s]*minlen[\s]*=' /etc/security/pwquality.conf
+echo '==|==' 
+grep -inE '^[\s]*account[\s]+requisite[\s]+pam_deny\.so[\s]*' /etc/pam.d/common-account
+echo '==|==' 
+grep -inE '^[\s]*account[\s]+required[\s]+pam_tally2\.so[\s]*' /etc/pam.d/common-account
+echo '==|==' 
+grep -inE '^[\s]*password[\s]*required[\s]*pam_pwhistory\.so' /etc/pam.d/common-password
+echo '==|==' 
+grep -inE '^password.*pam_unix\.so.*sha512$' /etc/pam.d/common-password
+echo '==|==' 
+grep -inE '^[\s]*PASS_MAX_DAYS[\s]' /etc/login.defs
+echo '==|==' 
+grep -inE '^[^:]+:[^!*]' /etc/shadow
+echo '==|==' 
+grep -inE '^[\s\t]*PASS_MIN_DAYS[\s]+' /etc/login.defs
+echo '==|==' 
+grep -inE '^[^:]+:[^!*]' /etc/shadow
+echo '==|==' 
+grep -inE '^[\s]*PASS_WARN_AGE[\s]+' /etc/login.defs
+echo '==|==' 
+grep -inE '^[^:]+:[^!*]' /etc/shadow
+echo '==|==' 
+grep -inE '^[^:]+:[^!*]' /etc/shadow
+echo '==|==' 
+grep -inE '^root:' /etc/passwd
+echo '==|==' 
+grep -inE '^[\s]*umask[\s]' /etc/bash.bashrc
+echo '==|==' 
+grep -inE '^[\s]*umask[\s]' /etc/profile
+echo '==|==' 
+grep -inE '^[\s]*umask[\s]' /etc/profile.d/*.sh
+echo '==|==' 
+grep -inE '^[\s]*(readonly[\s]+)?TMOUT[\s]*=[\s]*' /etc/bash.bashrc /etc/profile /etc/profile.d/*.sh;
